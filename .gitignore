@@ -1,2 +1,7 @@
+.gitignore
+
 *.pyc
 output/
+__pycache__/
+
+trained_model/
