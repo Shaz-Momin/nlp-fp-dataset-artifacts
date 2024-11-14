@@ -3,7 +3,7 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification, \
     AutoModelForQuestionAnswering, Trainer, TrainingArguments, HfArgumentParser
 import evaluate
 from helpers import prepare_dataset_nli, prepare_train_dataset_qa, \
-    prepare_validation_dataset_qa, QuestionAnsweringTrainer, compute_accuracy
+    prepare_validation_dataset_qa, QuestionAnsweringTrainer, compute_accuracy, compute_bleu
 import os
 import json
 
@@ -154,6 +154,22 @@ def main():
     elif args.task == 'nli':
         compute_metrics = compute_accuracy
     
+    # TODO: Define a custom compute_metrics function (EM, F1, BLEU)
+    def compute_metrics(eval_preds):
+        bleu_metric = evaluate.load('bleu')
+        
+        predictions, label_ids = eval_preds
+        
+        # Compute existing metrics (Exact Match and F1)
+        squad_metric = evaluate.load('squad')
+        squad_results = squad_metric.compute(predictions=predictions, references=label_ids)
+
+        # Compute BLEU score
+        bleu_score = compute_bleu(eval_preds)
+        
+        # Combine all metrics
+        results = {**squad_results, 'bleu': bleu_score}
+        return results
 
     # This function wraps the compute_metrics function, storing the model's predictions
     # so that they can be dumped along with the computed metrics
@@ -170,7 +186,7 @@ def main():
         train_dataset=train_dataset_featurized,
         eval_dataset=eval_dataset_featurized,
         tokenizer=tokenizer,
-        compute_metrics=compute_metrics_and_store_predictions
+        compute_metrics=compute_metrics_and_store_predictions if compute_metrics else None
     )
     # Train and/or evaluate
     if training_args.do_train:

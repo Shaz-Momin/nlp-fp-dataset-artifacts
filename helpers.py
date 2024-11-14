@@ -35,6 +35,24 @@ def compute_accuracy(eval_preds: EvalPrediction):
             np.float32).mean().item()
     }
 
+# compute bleu metrics for qa task
+def compute_bleu(eval_preds: EvalPrediction):
+    import evaluate
+    bleu_metric = evaluate.load("bleu")
+    
+    references = []
+    predictions = []
+
+    for pred, ref in zip(eval_preds.predictions, eval_preds.label_ids):
+        # Assuming pred is a dictionary with a key 'prediction_text'
+        predictions.append(pred['prediction_text'])
+        # Assuming ref is a dictionary with a key 'answers' containing a list of texts
+        references.append(ref['answers']['text'])
+
+    bleu_score = bleu_metric.compute(predictions=predictions, references=references)
+    
+    return bleu_score
+
 
 # This function preprocesses a question answering dataset, tokenizing the question and context text
 # and finding the right offsets for the answer spans in the tokenized context (to use as labels).

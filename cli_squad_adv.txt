@@ -1,0 +1,5 @@
+Evaluating on squad_adversarial (AddOneSent) data with trust_remote_code
+> python run.py --do_eval --task qa --dataset squad_adversarial --model ./trained_model/ --output_dir ./adv_addOneSent_eval_output/ --trust_remote_code --adversarial_config=AddOneSent
+
+Evaluating on squad_adversarial (AddSent) data with trust_remote_code
+> python run.py --do_eval --task qa --dataset squad_adversarial --model ./trained_model/ --output_dir ./adv_addSent_eval_output/ --trust_remote_code --adversarial_config=AddSent
