@@ -1,1 +1,0 @@
-{"eval_exact_match": 57.414661443760494, "eval_f1": 65.47364123360104, "eval_bleu": {"bleu": 0.5272792688063361, "precisions": [0.6267424798239178, 0.5615279672578445, 0.5014061872237846, 0.4380387931034483], "brevity_penalty": 1.0, "length_ratio": 1.3471707437608105, "translation_length": 5452, "reference_length": 4047}}

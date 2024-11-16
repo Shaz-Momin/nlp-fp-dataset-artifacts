@@ -73,7 +73,7 @@ def main():
             default_datasets[args.task]
         # MNLI has two validation splits (one with matched domains and one with mismatched domains). Most datasets just have one "validation" split
         eval_split = 'validation_matched' if dataset_id == ('glue', 'mnli') else 'validation'
-        # Load the raw data
+        # TODO: Load the raw data
         if ("squad_adversarial" in dataset_id): # for adversarial SQuAD dataset
             print("Loading adversarial SQuAD dataset with config:", args.adversarial_config)
             dataset = datasets.load_dataset(*dataset_id, args.adversarial_config, trust_remote_code=args.trust_remote_code)
@@ -117,9 +117,11 @@ def main():
     train_dataset_featurized = None
     eval_dataset_featurized = None
     if training_args.do_train:
+        print(dataset.keys())
         train_dataset = dataset['train']
         if args.max_train_samples:
             train_dataset = train_dataset.select(range(args.max_train_samples))
+        print(f"Number of training examples: {len(train_dataset)}")
         train_dataset_featurized = train_dataset.map(
             prepare_train_dataset,
             batched=True,
@@ -130,6 +132,7 @@ def main():
         eval_dataset = dataset[eval_split]
         if args.max_eval_samples:
             eval_dataset = eval_dataset.select(range(args.max_eval_samples))
+        print(f"Number of evaluation examples: {len(eval_dataset)}")
         eval_dataset_featurized = eval_dataset.map(
             prepare_eval_dataset,
             batched=True,
@@ -155,9 +158,7 @@ def main():
         compute_metrics = compute_accuracy
     
     # TODO: Define a custom compute_metrics function (EM, F1, BLEU)
-    def compute_metrics(eval_preds):
-        bleu_metric = evaluate.load('bleu')
-        
+    def compute_metrics(eval_preds):        
         predictions, label_ids = eval_preds
         
         # Compute existing metrics (Exact Match and F1)
