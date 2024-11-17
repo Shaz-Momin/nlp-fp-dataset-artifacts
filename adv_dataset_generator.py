@@ -9,8 +9,11 @@ def generate_adv_dataset(dataset_name, split_name, output_dir):
     # Filter out examples with "high-conf-turk" in their IDs
     filtered_dataset = dataset.filter(lambda example: "high-conf-turk" in example['id'])
 
+    # randomly select 750 records from this dataset before performing the split
+    #filtered_dataset = filtered_dataset["validation"].shuffle(seed=42).select(range(750))
+
     # Split the filtered dataset into train and validation sets (80-20 split)
-    train_test_split = filtered_dataset['validation'].train_test_split(test_size=0.2, seed=42)
+    train_test_split = filtered_dataset['validation'].shuffle(seed=42).select(range(750)).train_test_split(test_size=0.2, seed=42)
     dataset_split = DatasetDict({
         'train': train_test_split['train'],
         'validation': train_test_split['test']
@@ -71,7 +74,7 @@ def generate_addAny_dataset(input_path, output_dir):
     print("Train and validation datasets have been saved to train.jsonl and validation.jsonl respectively.")
 
 # TODO: Run functions below as needed (update paths as necessary)
-#generate_adv_dataset("squad_adversarial", "AddOneSent", "./adv_addOneSent")
+#generate_adv_dataset("squad_adversarial", "AddSent", "./adv_addSent")
 #generate_adv_dataset("squad_adversarial", "AddSent", "./adv_addSent")
 
 #parse_addAny_blob("./all_data.json", "./addAny_output.jsonl")
