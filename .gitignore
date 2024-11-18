@@ -5,3 +5,5 @@ output/
 __pycache__/
 
 trained_model/
+new_trained_models/
+new_trained_models_v2/
