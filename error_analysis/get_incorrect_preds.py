@@ -3,14 +3,16 @@ import string
 from datasets import load_dataset
 
 ADD_SENT_EVAL_INPUT = './adv_addSent/eval_output/eval_predictions.jsonl'
-ADD_ONE_SENT_EVAL_INPUT = './adv_addOneSent/eval_output/eval_predictions.jsonl'
+ADD_ANY_EVAL_INPUT = './adv_addAny/eval_output/eval_predictions.jsonl'
+ADD_COMMON_EVAL_INPUT = './adv_addCommon/eval_output/eval_predictions.jsonl'
 
 ADD_SENT_EVAL_OUTPUT = './error_analysis/addSent_incorrect_pred.jsonl'
-ADD_ONE_SENT_EVAL_OUTPUT = './error_analysis/addOneSent_incorrect_pred.jsonl'
+ADD_ANY_EVAL_OUTPUT = './error_analysis/addAny_incorrect_pred.jsonl'
+ADD_COMMON_EVAL_OUTPUT = './error_analysis/addCommon_incorrect_pred.jsonl'
 
 
 # Load the eval_predictions.jsonl file
-dataset = load_dataset('json', data_files=ADD_ONE_SENT_EVAL_INPUT, split='train')
+dataset = load_dataset('json', data_files=ADD_COMMON_EVAL_INPUT, split='train')
 
 # Function to remove trailing and leading punctuation from text
 def remove_punctuation(text):
@@ -28,7 +30,7 @@ def is_prediction_correct(example):
 incorrect_predictions = dataset.filter(lambda x: not is_prediction_correct(x))
 
 # Save incorrect predictions to a new file
-with open(ADD_ONE_SENT_EVAL_OUTPUT, 'w') as f:
+with open(ADD_COMMON_EVAL_OUTPUT, 'w') as f:
     for example in incorrect_predictions:
         f.write(json.dumps(example) + '\n')
 
