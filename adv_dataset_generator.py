@@ -58,12 +58,6 @@ def parse_addAny_blob(blob_path, output_path):
 
 # Function to parse the addAny blob and save the examples to a JSONL file
 def parse_addCommon_blob(blob_path, output_path):
-    # Load common words as a list
-    common_words = []
-    with open('./adv_addCommon/common_words.txt', 'r') as f:
-        for line in f:
-            common_words.append(line.strip())
-
     for i in range(8):
         # Load the JSON file
         with open(blob_path + "_" + str(i + 1) + ".json", 'r') as f:
@@ -87,16 +81,9 @@ def parse_addCommon_blob(blob_path, output_path):
                             'question': qa['question'],
                             'answers': answers
                         }
-
-                        # Generate adversarial addCommon examples by taking 10 random words from the common
-                        # words list and concatenating them to the end of context
-                        preturbed_sentence = random.sample(common_words, 10)  
-                        random.shuffle(preturbed_sentence)
-                        entry['context'] += " " + " ".join(preturbed_sentence) + "."
-                        entry['id'] += "_custom_adv"
-
+                        
                         # Only write examples that are perturbed (ids contain "adversarial")
-                        if "custom_adv" in entry['id']:
+                        if "adversarial" in entry['id']:
                             f_out.write(json.dumps(entry) + '\n')
 
 # Split the addAny_output.jsonl file into train and validation sets
@@ -121,8 +108,21 @@ def generate_custom_dataset(input_path, output_dir):
 #generate_adv_dataset("squad_adversarial", "AddSent", "./adv_addSent")
 #generate_adv_dataset("squad_adversarial", "AddSent", "./adv_addSent")
 
-# parse_addAny_blob("./all_data.json", "./addAny_output.jsonl")
+# parse_addAny_blob("./all_data.json", "./unpertubed_addAny.jsonl")
 # generate_custom_dataset("addAny_output.jsonl", "./adv_addAny")
 
-#parse_addCommon_blob("./adv_addCommon/clean_data/clean_data", "./adv_addCommon/addCommon_output.jsonl")
-#generate_custom_dataset("./adv_addCommon/addCommon_output.jsonl", "./adv_addCommon")
+# parse_addCommon_blob("./adv_addCommon/addCommon_data/data", "./adv_addCommon/addCommon_output.jsonl")
+generate_custom_dataset("./adv_addCommon/addCommon_output.jsonl", "./adv_addCommon")
+
+def get_addSent_unperturbed():
+    # Load the squad_adversarial dataset
+    dataset = load_dataset("squad_adversarial", "AddSent")
+
+    # Filter out examples with "high-conf-turk" in their IDs
+    filtered_dataset = dataset.filter(lambda example: "high-conf-turk" not in example['id'])
+
+    # Save the dataset to a JSONL file
+    filtered_dataset['validation'].to_json("unperturbed_AddSent.jsonl")
+
+    print("Unperturbed examples from AddSent saved to all_unperturbed.jsonl (Total examples: " + str(len(filtered_dataset['validation'])) + ")")
+
