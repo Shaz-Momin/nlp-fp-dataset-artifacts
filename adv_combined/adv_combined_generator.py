@@ -21,4 +21,4 @@ def combine_files(combined_file):
             outfile.write('\n')
 
 # Combine the files
-combine_files("train")
+#combine_files("train")
