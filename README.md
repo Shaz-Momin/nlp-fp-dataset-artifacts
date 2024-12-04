@@ -1,13 +1,20 @@
-# fp-dataset-artifacts
+# Exploring Diverse Fine-Tuning Approach across Adversarial Datasets for QA Tasks
 
-Project by Kaj Bostrom, Jifan Chen, and Greg Durrett. Code by Kaj Bostrom and Jifan Chen.
+This work explores two distinct approaches to fine-tuning the base ELECTRA-small model for the SQuAD QA task: one that exclusively uses challenge sets (AddSent, AddAny, and AddCommon) and another that combines adversarial and natural examples. Our goal is to assess the impact of a more diverse training set on the resulting model's performance against concatenative adversaries. We evaluated both models on the base SQuAD and challenge sets, observing a 55\% to 61\% improvement in performance on one of the most challenging sets. Baseline and improved model performances were further analyzed across three error classes along with metrics such as F1 accuracy and BLEU precision scores to measure overall enhancements.
+
+[Full Project Paper Here (PDF)](./Datasets%20Artifact%20Final%20Paper%20(Shaz%20Momin).pdf)
+
+# fp-dataset-artifacts (NLP)
+
+Project by @Shaz-Momin.
+Originally forked as a template from Kaj Bostrom, Jifan Chen, and Greg Durrett (Code by Kaj Bostrom and Jifan Chen.)
 
 ## Getting Started
 You'll need Python >= 3.6 to run the code in this repo.
 
 First, clone the repository:
 
-`git clone git@github.com:gregdurrett/fp-dataset-artifacts.git`
+`git clone git@github.com:Shaz-Momin/nlp-fp-dataset-artifacts.git`
 
 Then install the dependencies:
 
